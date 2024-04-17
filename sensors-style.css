@@ -1,0 +1,66 @@
+.disconnect-button {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.sensors-list {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    width: 80%;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: black;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 50px;
+}
+
+.grid-container>div {
+    height: auto;
+}
+
+.card {
+    height: 230px;
+    width: 250px;
+    background-color: white;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+}
+
+.container {
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 40px;
+}
+
+.container p {
+    font-size: 25px;
+    font-weight: 700;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+#sensor-image {
+    width: 100px;
+    height: 100px;
+    margin-top: 25px;
+    align-self: center;
+}
+
+.copyright {
+    margin-top: 25px;
+    padding-bottom: 15px;
+    text-align: center;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    margin-bottom: 0;
+}
