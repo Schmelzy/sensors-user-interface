@@ -49,6 +49,11 @@ function onConnectionLost(responseObject) {
     }
 }
 
+let temperature = document.getElementById("temp");
+let humidity = document.getElementById("humidity");
+let soilMoisture = document.getElementById("soil-moisture");
+let light = document.getElementById("light");
+
 // Called when a message arrives
 function onMessageArrived(message) {
     console.log("onMessageArrived: " + message.payloadString);
@@ -56,16 +61,16 @@ function onMessageArrived(message) {
 
     switch (message.destinationName) {
         case "tugay/temperature":
-            document.getElementById("temp").innerHTML = message.payloadString;
+            temperature.textContent = message.payloadString;
             break;
         case "tugay/humidity":
-            document.getElementById("humidity").innerHTML = message.payloadString;
+            humidity.textContent = message.payloadString;
             break;
         case "tugay/soil_moisture":
-            document.getElementById("soil-moisture").innerHTML = message.payloadString;
+            soilMoisture.textContent = message.payloadString;
             break;
         case "tugay/light":
-            document.getElementById("light").innerHTML = message.payloadString;
+            light.textContent = message.payloadString;
     }
     updateScroll(); // Scroll to bottom of window
 }
@@ -73,6 +78,11 @@ function onMessageArrived(message) {
 // Called when the disconnection button is pressed
 function startDisconnect() {
     client.disconnect();
+    document.getElementById("messages").innerHTML += '<span>Unsubscribing to: ' + topic + '</span><br/>';
+    temperature.textContent = "Temperature";
+    humidity.textContent = "Humidity";
+    soilMoisture.textContent = "Soil Moisture";
+    light.textContent = "Light Intensity";
     document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
     updateScroll(); // Scroll to bottom of window
 }
