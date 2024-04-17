@@ -64,6 +64,8 @@ function onMessageArrived(message) {
         case "tugay/soil_moisture":
             document.getElementById("soil-moisture").innerHTML = message.payloadString;
             break;
+        case "tugay/light":
+            document.getElementById("light").innerHTML = message.payloadString;
     }
     updateScroll(); // Scroll to bottom of window
 }
