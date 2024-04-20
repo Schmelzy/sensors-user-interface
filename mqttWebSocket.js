@@ -4,10 +4,10 @@ function startConnect() {
     clientID = "clientID-" + "Control Panel";
 
     // Fetch the hostname/IP address and port number from the form
-    host = document.getElementById("host").value;
-    port = document.getElementById("port").value;
-    user = document.getElementById("username").value;
-    pass = document.getElementById("password").value;
+    let host = document.getElementById("host").value;
+    let port = document.getElementById("port").value;
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
 
     // Print output for the user in the messages div
     document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
@@ -31,7 +31,7 @@ function startConnect() {
 function onConnect() {
 
     // Fetch the MQTT topic from the form
-    topic = document.getElementById("topic").value;
+    let topic = document.getElementById("topic").value;
 
     // Print output for the user in the messages div
     document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic + '</span><br/>';
@@ -83,6 +83,11 @@ function startDisconnect() {
     humidity.textContent = "Humidity";
     soilMoisture.textContent = "Soil Moisture";
     light.textContent = "Light Intensity";
+    document.getElementById("host").value = "";
+    document.getElementById("port").value = "";
+    document.getElementById("topic").value = "";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
     document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
     updateScroll(); // Scroll to bottom of window
 }
