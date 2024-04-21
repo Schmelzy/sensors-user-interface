@@ -1,43 +1,66 @@
+let isConnected = false;
+
 // Called after form input is processed
 function startConnect() {
-    // Generate a random client ID
-    clientID = "clientID-" + "Control Panel";
 
-    // Fetch the hostname/IP address and port number from the form
-    let host = document.getElementById("host").value;
-    let port = document.getElementById("port").value;
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
+    if (isConnected) {
+        onConnect();
+    } else {
+        // Generate a random client ID
+        clientID = "clientID-" + "Control Panel";
 
-    // Print output for the user in the messages div
-    document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
+        // Fetch the hostname/IP address and port number from the form
+        let host = document.getElementById("host").value;
+        let port = document.getElementById("port").value;
+        let user = document.getElementById("username").value;
+        let pass = document.getElementById("password").value;
 
-    // Initialize new Paho client connection
-    client = new Paho.Client(host, Number(port), clientID);
+        // Print output for the user in the messages div
+        if (subscribedTopics.length < 1 && host !== "" && port !== "") {
+            document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
+        }
+        // Initialize new Paho client connection
+        client = new Paho.Client(host, Number(port), clientID);
 
-    // Set callback handlers
-    client.onConnectionLost = onConnectionLost;
-    client.onMessageArrived = onMessageArrived;
+        // Set callback handlers
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
 
-    // Connect the client, if successful - call onConnect function
-    client.connect({
-        onSuccess: onConnect,
-        userName: user,
-        password: pass
-    });
+        // Connect the client, if successful - call onConnect function
+        client.connect({
+            onSuccess: onConnect,
+            userName: user,
+            password: pass
+        });
+        isConnected = true;
+    }
 }
+
+let subscribedTopics = [];
+let topic;
 
 // Called when the client connects
 function onConnect() {
 
     // Fetch the MQTT topic from the form
-    let topic = document.getElementById("topic").value;
+    topic = document.getElementById("topic").value;
 
     // Print output for the user in the messages div
-    document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic + '</span><br/>';
-
+    if (isConnected && topic !== "" && !subscribedTopics.includes(topic)) {
+        document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic + '</span><br/>';
+    }
+    let options = document.getElementById("dynamic-select");
     // Subscribe to the requested topic
-    client.subscribe(topic);
+    if (topic !== "" && !subscribedTopics.includes(topic)) {
+        client.subscribe(topic);
+        subscribedTopics.push(topic);
+        let newOption = new Option(topic, topic)
+        newOption.id = "option-" + topic.split("tugay/")[1];
+        options.appendChild(newOption);
+    }
+    if (isConnected) {
+        document.getElementById("topic").value = "";
+    }
 }
 
 // Called when the client loses its connection
@@ -77,18 +100,45 @@ function onMessageArrived(message) {
 
 // Called when the disconnection button is pressed
 function startDisconnect() {
-    client.disconnect();
-    document.getElementById("messages").innerHTML += '<span>Unsubscribing to: ' + topic + '</span><br/>';
-    temperature.textContent = "Temperature";
-    humidity.textContent = "Humidity";
-    soilMoisture.textContent = "Soil Moisture";
-    light.textContent = "Light Intensity";
-    document.getElementById("host").value = "";
-    document.getElementById("port").value = "";
-    document.getElementById("topic").value = "";
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
+    let selectElement = document.getElementById("dynamic-select");
+    let selectedOption = selectElement.value;
+    let topicOption = document.getElementById("option-" + selectedOption.split("tugay/")[1]);
+    let topicToDisconnect = topicOption.value;
+    client.unsubscribe(topicToDisconnect);
+    subscribedTopics.splice(subscribedTopics.indexOf(topicToDisconnect), 1);
+    selectElement.removeChild(topicOption);
+
+    if (topicToDisconnect.includes("#")) {
+        client.disconnect();
+        temperature.textContent = "Temperature";
+        humidity.textContent = "Humidity";
+        soilMoisture.textContent = "Soil Moisture";
+        light.textContent = "Light Intensity";
+        subscribedTopics = [];
+        isConnected = false;
+    } else if (topicToDisconnect.includes("light")) {
+        light.textContent = "Light Intensity";
+    } else if (topicToDisconnect.includes("temperature")) {
+        temperature.textContent = "Temperature";
+    } else if (topicToDisconnect.includes("humidity")) {
+        humidity.textContent = "Humidity";
+    } else if (topicToDisconnect.includes("soil")) {
+        soilMoisture.textContent = "Soil Moisture";
+    }
+    document.getElementById("messages").innerHTML += '<span>Unsubscribing to: ' + topicToDisconnect + '</span><br/>';
+
+    if (subscribedTopics.length < 1) {
+        document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/><br/>';
+        isConnected = false;
+    }
+    if (!isConnected) {
+        document.getElementById("host").value = "";
+        document.getElementById("port").value = "";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    }
+    selectElement.selectedIndex = 0;
+    // document.getElementById("topic").value = "";
     updateScroll(); // Scroll to bottom of window
 }
 
