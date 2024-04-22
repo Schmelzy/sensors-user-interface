@@ -6,33 +6,43 @@ function startConnect() {
     if (isConnected) {
         onConnect();
     } else {
-        // Generate a random client ID
-        clientID = "clientID-" + "Control Panel";
-
         // Fetch the hostname/IP address and port number from the form
         let host = document.getElementById("host").value;
         let port = document.getElementById("port").value;
-        let user = document.getElementById("username").value;
-        let pass = document.getElementById("password").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
 
-        // Print output for the user in the messages div
-        if (subscribedTopics.length < 1 && host !== "" && port !== "") {
-            document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
-        }
-        // Initialize new Paho client connection
-        client = new Paho.Client(host, Number(port), clientID);
+        fetch('users.json')
+            .then(response => response.json())
+            .then(data => {
+                if (data.username === username && data.password === password) {
+                    // Generate a random client ID
+                    clientID = "clientID-" + "Control Panel";
+                    // Print output for the user in the messages div
+                    if (subscribedTopics.length < 1 && host !== "" && port !== "") {
+                        document.getElementById("messages").innerHTML += '<span>Authentication successful</span><br/>'
+                        document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
+                    }
+                    // Initialize new Paho client connection
+                    client = new Paho.Client(host, Number(port), clientID);
 
-        // Set callback handlers
-        client.onConnectionLost = onConnectionLost;
-        client.onMessageArrived = onMessageArrived;
+                    // Set callback handlers
+                    client.onConnectionLost = onConnectionLost;
+                    client.onMessageArrived = onMessageArrived;
 
-        // Connect the client, if successful - call onConnect function
-        client.connect({
-            onSuccess: onConnect,
-            userName: user,
-            password: pass
-        });
-        isConnected = true;
+                    // Connect the client, if successful - call onConnect function
+                    client.connect({
+                        onSuccess: onConnect
+                    });
+                    isConnected = true;
+
+                } else {
+                    document.getElementById("username").value = "";
+                    document.getElementById("password").value = "";
+                    document.getElementById("messages").innerHTML += '<span>Authentication unsuccessful. Please try again!</span><br/>';
+                }
+                updateScroll(); // Scroll to bottom of window
+            });
     }
 }
 
@@ -138,7 +148,6 @@ function startDisconnect() {
         document.getElementById("password").value = "";
     }
     selectElement.selectedIndex = 0;
-    // document.getElementById("topic").value = "";
     updateScroll(); // Scroll to bottom of window
 }
 
