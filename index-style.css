@@ -29,12 +29,12 @@ input[type=text] {
     margin: 8px 0;
 }
 
-input[type=password] {
+/* input[type=password] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
     margin-bottom: 12px;
-}
+} */
 
 input[type=button] {
     background-color: orange;
@@ -44,7 +44,9 @@ input[type=button] {
     font-weight: bold;
     height: 55px;
     width: 150px;
-    margin: 4px 2px;
+    margin-left: 2px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     cursor: pointer;
     font-size: 18px;
     text-align: center;
@@ -54,9 +56,9 @@ input[type=text]:focus {
     background-color: lightblue;
 }
 
-input[type=password]:focus {
+/* input[type=password]:focus {
     background-color: lightblue;
-}
+} */
 
 input[type=button]:hover {
     background-color: rgb(214, 146, 20);
@@ -71,8 +73,8 @@ input[type=button]:hover {
     display: inline-block;
     border: 1px solid white;
     background-color: black;
-    max-height: 220px;
-    min-height: 220px;
+    max-height: 240px;
+    min-height: 240px;
     overflow: scroll;
 }
 
