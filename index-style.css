@@ -13,6 +13,10 @@ body {
     padding-left: 10px;
 }
 
+.wrapper h1 {
+    text-align: center;
+}
+
 input {
     height: 55px;
     border-radius: 6px;
