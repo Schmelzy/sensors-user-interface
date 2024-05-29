@@ -12,8 +12,9 @@ function startConnect() {
         // Fetch the hostname/IP address and port number from the form
         let host = document.getElementById("host").value;
         let port = document.getElementById("port").value;
-        let user = document.getElementById("username").value;
-        let pass = document.getElementById("password").value;
+	// Use public MQTT broker without username and password
+        let user = '';
+        let pass = '';
 
         // Print output for the user in the messages div
         if (subscribedTopics.length < 1 && host !== "" && port !== "") {
